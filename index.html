@@ -1,166 +1,304 @@
-<script>
-  const botaoNao = document.getElementById("nao");
-  const botaoSim = document.getElementById("sim");
-  const conteudoInicial = document.getElementById("conteudoInicial");
-  const resposta = document.getElementById("resposta");
+<!DOCTYPE html>
+<html lang="pt-BR">
 
-  let tentativas = 0;
-  let podeClicarNao = false;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  // Coloca o botão NÃO inicialmente ao lado do SIM
-  function posicionarNao() {
-    const simRect = botaoSim.getBoundingClientRect();
+  <title>Tenho uma pergunta... ❤️</title>
 
-    botaoNao.style.left = (simRect.right + 15) + "px";
-    botaoNao.style.top = simRect.top + "px";
-  }
+  <style>
 
-  window.addEventListener("load", posicionarNao);
-  window.addEventListener("resize", posicionarNao);
-
-
-  // Move o botão NÃO para um ponto aleatório da tela
-  function fugirDoNao(event) {
-
-    if (podeClicarNao) {
-      return;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    if (event) {
-      event.preventDefault();
-    }
+    body {
+      min-height: 100vh;
 
-    tentativas++;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-    const margem = 20;
+      padding: 20px;
 
-    const larguraBotao = botaoNao.offsetWidth;
-    const alturaBotao = botaoNao.offsetHeight;
+      font-family: Arial, Helvetica, sans-serif;
 
-    const maxX =
-      window.innerWidth - larguraBotao - margem;
+      color: white;
 
-    const maxY =
-      window.innerHeight - alturaBotao - margem;
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(255,255,255,.30),
+          transparent 35%
+        ),
+        linear-gradient(
+          135deg,
+          #ff5f6d,
+          #ffc371
+        );
 
-    const novoX =
-      margem + Math.random() * (maxX - margem);
-
-    const novoY =
-      margem + Math.random() * (maxY - margem);
-
-    botaoNao.style.left = novoX + "px";
-    botaoNao.style.top = novoY + "px";
-
-
-    // Mensagens engraçadas
-    const frases = [
-      "OPA! 😂",
-      "NÃO TÃO RÁPIDO 😏",
-      "QUASE! 😂",
-      "TENTA DE NOVO 👀",
-      "HAHAHAHA 😂",
-      "O SIM TÁ ALI 👉 ❤️",
-      "VOCÊ É PERSISTENTE 😂"
-    ];
-
-    if (tentativas <= frases.length) {
-      botaoNao.innerHTML = frases[tentativas - 1];
+      overflow: hidden;
     }
 
 
-    // Depois de 7 tentativas deixa clicar
-    if (tentativas >= 7) {
+    /* =========================
+       CARTÃO PRINCIPAL
+    ========================= */
 
-      podeClicarNao = true;
+    .card {
+      width: 100%;
+      max-width: 620px;
 
-      botaoNao.innerHTML = "Tá bom... NÃO 😅";
+      padding: 45px 30px;
 
-      botaoNao.style.background = "#555";
-    }
-  }
+      text-align: center;
 
+      background: rgba(255,255,255,.16);
 
-  // Funciona com mouse, caneta e touchscreen
-  botaoNao.addEventListener("pointerenter", fugirDoNao);
+      border: 1px solid rgba(255,255,255,.30);
 
+      border-radius: 30px;
 
-  // No celular, se tocar diretamente
-  botaoNao.addEventListener("pointerdown", function(event) {
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
 
-    if (!podeClicarNao) {
-      fugirDoNao(event);
-    }
+      box-shadow:
+        0 25px 60px rgba(0,0,0,.25);
 
-  });
+      animation: entrada .8s ease;
 
+      position: relative;
 
-  // Clique no NÃO
-  botaoNao.addEventListener("click", function(event) {
-
-    if (!podeClicarNao) {
-
-      event.preventDefault();
-      fugirDoNao(event);
-
-      return;
+      z-index: 10;
     }
 
-    alert(
-      "Tudo bem 😂 A brincadeira acaba aqui. Sem pressão ❤️"
-    );
 
-  });
+    @keyframes entrada {
 
+      from {
+        opacity: 0;
+        transform:
+          translateY(30px)
+          scale(.95);
+      }
 
-  // Botão SIM
-  botaoSim.addEventListener("click", function() {
+      to {
+        opacity: 1;
+        transform:
+          translateY(0)
+          scale(1);
+      }
 
-    botaoNao.style.display = "none";
-
-    conteudoInicial.style.display = "none";
-    resposta.style.display = "block";
-
-    festaDeCoracoes();
-
-  });
-
-
-  // Cria os corações
-  function criarCoracao() {
-
-    const heart = document.createElement("div");
-
-    heart.className = "heart";
-
-    const emojis = [
-      "❤️",
-      "💕",
-      "💖",
-      "💗",
-      "🤍",
-      "🥳"
-    ];
-
-    heart.innerHTML =
-      emojis[Math.floor(Math.random() * emojis.length)];
-
-    heart.style.left =
-      Math.random() * 100 + "vw";
-
-    heart.style.fontSize =
-      (20 + Math.random() * 35) + "px";
-
-    heart.style.animationDuration =
-      (3 + Math.random() * 3) + "s";
-
-    document.body.appendChild(heart);
-
-    setTimeout(function() {
-      heart.remove();
-    }, 6000);
-  }
+    }
 
 
-  // Festa ao clicar SIM
-  function
+    /* =========================
+       CORAÇÃO PRINCIPAL
+    ========================= */
+
+    .coracao-principal {
+      font-size: 70px;
+
+      margin-bottom: 15px;
+
+      animation: bater 1.2s infinite;
+    }
+
+
+    @keyframes bater {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.15);
+      }
+
+    }
+
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 22px;
+    }
+
+
+    .mensagem {
+      font-size: 18px;
+      line-height: 1.7;
+
+      margin-bottom: 30px;
+    }
+
+
+    .pergunta {
+      font-size: 26px;
+      font-weight: bold;
+
+      margin-bottom: 30px;
+    }
+
+
+    /* =========================
+       ÁREA DOS BOTÕES
+    ========================= */
+
+    .area-botoes {
+      min-height: 80px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 20px;
+
+      position: relative;
+    }
+
+
+    button {
+
+      border: none;
+
+      padding: 16px 30px;
+
+      border-radius: 50px;
+
+      font-size: 17px;
+      font-weight: bold;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 10px 25px rgba(0,0,0,.18);
+
+      user-select: none;
+      -webkit-user-select: none;
+
+    }
+
+
+    /* =========================
+       BOTÃO SIM
+    ========================= */
+
+    #sim {
+
+      background: white;
+      color: #e63963;
+
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+
+    }
+
+
+    #sim:hover {
+
+      transform: scale(1.12);
+
+      box-shadow:
+        0 15px 30px rgba(0,0,0,.25);
+
+    }
+
+
+    /* =========================
+       BOTÃO NÃO
+       
+       IMPORTANTE:
+       ELE COMEÇA NORMAL.
+       DEPOIS O JAVASCRIPT
+       TRANSFORMA EM FIXED.
+    ========================= */
+
+    #nao {
+
+      background: #333;
+      color: white;
+
+      z-index: 9999;
+
+      transition:
+        left .15s ease,
+        top .15s ease;
+
+      touch-action: none;
+
+    }
+
+
+    /* =========================
+       TEXTO DE AVISO
+    ========================= */
+
+    .aviso {
+
+      margin-top: 10px;
+
+      font-size: 13px;
+
+      opacity: .75;
+
+    }
+
+
+    /* =========================
+       RESPOSTA FINAL
+    ========================= */
+
+    #resposta {
+
+      display: none;
+
+      animation: entrada .8s ease;
+
+    }
+
+
+    #resposta h2 {
+
+      font-size: 34px;
+
+      margin-bottom: 20px;
+
+    }
+
+
+    #resposta p {
+
+      font-size: 19px;
+
+      line-height: 1.7;
+
+    }
+
+
+    .emoji-final {
+
+      font-size: 80px;
+
+      margin-bottom: 20px;
+
+      animation: bater .7s infinite;
+
+    }
+
+
+    /* =========================
+       CORAÇÕES DA FESTA
+    ========================= */
+
+    .heart {
+
+      position: fixed;
+
+      bottom: -50px;
+
+      pointer-events

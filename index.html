@@ -1,533 +1,166 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  const botaoNao = document.getElementById("nao");
+  const botaoSim = document.getElementById("sim");
+  const conteudoInicial = document.getElementById("conteudoInicial");
+  const resposta = document.getElementById("resposta");
 
-  <title>Tenho uma pergunta... ❤️</title>
+  let tentativas = 0;
+  let podeClicarNao = false;
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+  // Coloca o botão NÃO inicialmente ao lado do SIM
+  function posicionarNao() {
+    const simRect = botaoSim.getBoundingClientRect();
+
+    botaoNao.style.left = (simRect.right + 15) + "px";
+    botaoNao.style.top = simRect.top + "px";
+  }
+
+  window.addEventListener("load", posicionarNao);
+  window.addEventListener("resize", posicionarNao);
+
+
+  // Move o botão NÃO para um ponto aleatório da tela
+  function fugirDoNao(event) {
+
+    if (podeClicarNao) {
+      return;
     }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-
-      font-family: Arial, Helvetica, sans-serif;
-      color: white;
-
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,.3), transparent 35%),
-        linear-gradient(135deg, #ff5f6d, #ffc371);
-
-      overflow: hidden;
+    if (event) {
+      event.preventDefault();
     }
 
-    .card {
-      width: 100%;
-      max-width: 620px;
-      padding: 45px 30px;
+    tentativas++;
 
-      text-align: center;
+    const margem = 20;
 
-      background: rgba(255,255,255,.16);
-      border: 1px solid rgba(255,255,255,.3);
-      border-radius: 30px;
+    const larguraBotao = botaoNao.offsetWidth;
+    const alturaBotao = botaoNao.offsetHeight;
 
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
+    const maxX =
+      window.innerWidth - larguraBotao - margem;
 
-      box-shadow: 0 25px 60px rgba(0,0,0,.25);
+    const maxY =
+      window.innerHeight - alturaBotao - margem;
 
-      animation: entrada .8s ease;
-      position: relative;
-      z-index: 10;
-    }
+    const novoX =
+      margem + Math.random() * (maxX - margem);
 
-    @keyframes entrada {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(.95);
-      }
+    const novoY =
+      margem + Math.random() * (maxY - margem);
 
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
+    botaoNao.style.left = novoX + "px";
+    botaoNao.style.top = novoY + "px";
 
-    .coracao-principal {
-      font-size: 70px;
-      margin-bottom: 15px;
-      animation: bater 1.2s infinite;
-    }
 
-    @keyframes bater {
-      0%, 100% {
-        transform: scale(1);
-      }
+    // Mensagens engraçadas
+    const frases = [
+      "OPA! 😂",
+      "NÃO TÃO RÁPIDO 😏",
+      "QUASE! 😂",
+      "TENTA DE NOVO 👀",
+      "HAHAHAHA 😂",
+      "O SIM TÁ ALI 👉 ❤️",
+      "VOCÊ É PERSISTENTE 😂"
+    ];
 
-      50% {
-        transform: scale(1.15);
-      }
-    }
-
-    h1 {
-      font-size: 36px;
-      margin-bottom: 22px;
-    }
-
-    .mensagem {
-      font-size: 18px;
-      line-height: 1.7;
-      margin-bottom: 30px;
-    }
-
-    .pergunta {
-      font-size: 26px;
-      font-weight: bold;
-      margin-bottom: 35px;
-    }
-
-    .area-botoes {
-      height: 100px;
-      position: relative;
-    }
-
-    button {
-      border: none;
-      padding: 16px 30px;
-      border-radius: 50px;
-
-      font-size: 17px;
-      font-weight: bold;
-
-      cursor: pointer;
-
-      box-shadow: 0 10px 25px rgba(0,0,0,.18);
-
-      transition:
-        transform .2s ease,
-        box-shadow .2s ease;
-    }
-
-    #sim {
-      position: absolute;
-
-      left: 25%;
-      top: 10px;
-
-      transform: translateX(-50%);
-
-      background: white;
-      color: #e63963;
-    }
-
-    #sim:hover {
-      transform: translateX(-50%) scale(1.12);
-      box-shadow: 0 15px 30px rgba(0,0,0,.25);
-    }
-
-    #nao {
-      position: fixed;
-
-      background: #333;
-      color: white;
-
-      z-index: 999;
-
-      transition:
-        left .18s ease,
-        top .18s ease,
-        transform .15s ease;
-    }
-
-    #resposta {
-      display: none;
-      animation: entrada .8s ease;
-    }
-
-    #resposta h2 {
-      font-size: 34px;
-      margin-bottom: 20px;
-    }
-
-    #resposta p {
-      font-size: 19px;
-      line-height: 1.7;
-    }
-
-    .emoji-final {
-      font-size: 80px;
-      margin-bottom: 20px;
-      animation: bater .7s infinite;
-    }
-
-    .heart {
-      position: fixed;
-
-      bottom: -50px;
-
-      pointer-events: none;
-
-      animation: subir linear forwards;
-
-      z-index: 1;
-    }
-
-    @keyframes subir {
-
-      0% {
-        transform: translateY(0) rotate(0);
-        opacity: 1;
-      }
-
-      100% {
-        transform: translateY(-120vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
-
-    .aviso {
-      margin-top: 20px;
-      font-size: 13px;
-      opacity: .7;
-    }
-
-    @media (max-width: 600px) {
-
-      .card {
-        padding: 35px 20px;
-      }
-
-      h1 {
-        font-size: 29px;
-      }
-
-      .mensagem {
-        font-size: 16px;
-      }
-
-      .pergunta {
-        font-size: 22px;
-      }
-
-      button {
-        padding: 14px 22px;
-        font-size: 15px;
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="card" id="card">
-
-    <div id="conteudoInicial">
-
-      <div class="coracao-principal">
-        ❤️
-      </div>
-
-      <h1>Ok... precisamos conversar 😅</h1>
-
-      <div class="mensagem">
-
-        Eu pensei em escrever um textão enorme...
-
-        <br><br>
-
-        Pensei em fazer um discurso digno de novela...
-
-        <br><br>
-
-        Mas resolvi facilitar. 😂
-
-        <br><br>
-
-        A verdade é que sinto falta das coisas boas,
-        das risadas e da nossa paz.
-
-        <br><br>
-
-        Então eu tenho apenas uma pequena pergunta...
-
-      </div>
-
-      <div class="pergunta">
-        Vamos fazer as pazes? 🥺❤️
-      </div>
-
-      <div class="area-botoes">
-
-        <button id="sim">
-          SIM ❤️
-        </button>
-
-      </div>
-
-      <div class="aviso">
-        Escolha com sabedoria 👀
-      </div>
-
-    </div>
-
-
-    <div id="resposta">
-
-      <div class="emoji-final">
-        🥳❤️
-      </div>
-
-      <h2>EU SABIA! 😂</h2>
-
-      <p>
-        Decisão aceita com sucesso! ✅
-        <br><br>
-
-        O tratado de paz acaba de ser oficialmente assinado.
-        🤝😂
-        <br><br>
-
-        As tretas anteriores serão arquivadas,
-        o orgulho será colocado de castigo
-        e uma nova tentativa acaba de ser desbloqueada.
-        ❤️
-        <br><br>
-
-        Agora vem cá...
-        <br>
-        precisamos conversar de verdade. 🥹
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <button id="nao">
-    NÃO 😒
-  </button>
-
-
-  <script>
-
-    const botaoNao = document.getElementById("nao");
-    const botaoSim = document.getElementById("sim");
-
-    const conteudoInicial =
-      document.getElementById("conteudoInicial");
-
-    const resposta =
-      document.getElementById("resposta");
-
-    let tentativas = 0;
-
-
-    // Coloca o botão NÃO perto do SIM ao abrir a página
-
-    function posicaoInicialNao() {
-
-      const card = document.getElementById("card");
-      const rect = card.getBoundingClientRect();
-
-      botaoNao.style.left =
-        (rect.left + rect.width * 0.58) + "px";
-
-      botaoNao.style.top =
-        (rect.bottom - 130) + "px";
+    if (tentativas <= frases.length) {
+      botaoNao.innerHTML = frases[tentativas - 1];
     }
 
 
-    window.addEventListener(
-      "load",
-      posicaoInicialNao
+    // Depois de 7 tentativas deixa clicar
+    if (tentativas >= 7) {
+
+      podeClicarNao = true;
+
+      botaoNao.innerHTML = "Tá bom... NÃO 😅";
+
+      botaoNao.style.background = "#555";
+    }
+  }
+
+
+  // Funciona com mouse, caneta e touchscreen
+  botaoNao.addEventListener("pointerenter", fugirDoNao);
+
+
+  // No celular, se tocar diretamente
+  botaoNao.addEventListener("pointerdown", function(event) {
+
+    if (!podeClicarNao) {
+      fugirDoNao(event);
+    }
+
+  });
+
+
+  // Clique no NÃO
+  botaoNao.addEventListener("click", function(event) {
+
+    if (!podeClicarNao) {
+
+      event.preventDefault();
+      fugirDoNao(event);
+
+      return;
+    }
+
+    alert(
+      "Tudo bem 😂 A brincadeira acaba aqui. Sem pressão ❤️"
     );
 
+  });
 
-    window.addEventListener(
-      "resize",
-      posicaoInicialNao
-    );
 
+  // Botão SIM
+  botaoSim.addEventListener("click", function() {
 
-    // Faz o botão fugir
+    botaoNao.style.display = "none";
 
-    function fugir() {
+    conteudoInicial.style.display = "none";
+    resposta.style.display = "block";
 
-      tentativas++;
+    festaDeCoracoes();
 
-      const larguraBotao =
-        botaoNao.offsetWidth;
+  });
 
-      const alturaBotao =
-        botaoNao.offsetHeight;
 
-      const margem = 20;
+  // Cria os corações
+  function criarCoracao() {
 
+    const heart = document.createElement("div");
 
-      const maxX =
-        window.innerWidth -
-        larguraBotao -
-        margem;
+    heart.className = "heart";
 
-      const maxY =
-        window.innerHeight -
-        alturaBotao -
-        margem;
+    const emojis = [
+      "❤️",
+      "💕",
+      "💖",
+      "💗",
+      "🤍",
+      "🥳"
+    ];
 
+    heart.innerHTML =
+      emojis[Math.floor(Math.random() * emojis.length)];
 
-      const novoX =
-        Math.max(
-          margem,
-          Math.random() * maxX
-        );
+    heart.style.left =
+      Math.random() * 100 + "vw";
 
-      const novoY =
-        Math.max(
-          margem,
-          Math.random() * maxY
-        );
+    heart.style.fontSize =
+      (20 + Math.random() * 35) + "px";
 
+    heart.style.animationDuration =
+      (3 + Math.random() * 3) + "s";
 
-      botaoNao.style.left =
-        novoX + "px";
+    document.body.appendChild(heart);
 
-      botaoNao.style.top =
-        novoY + "px";
+    setTimeout(function() {
+      heart.remove();
+    }, 6000);
+  }
 
 
-      // As frases vão mudando 😈
-
-      if (tentativas === 1) {
-
-        botaoNao.innerHTML =
-          "OPA! 😂";
-
-      }
-
-      else if (tentativas === 2) {
-
-        botaoNao.innerHTML =
-          "TENTA DE NOVO 😏";
-
-      }
-
-      else if (tentativas === 3) {
-
-        botaoNao.innerHTML =
-          "QUASE! 😂";
-
-      }
-
-      else if (tentativas === 4) {
-
-        botaoNao.innerHTML =
-          "VOCÊ NÃO DESISTE? 👀";
-
-      }
-
-      else if (tentativas === 5) {
-
-        botaoNao.innerHTML =
-          "O SIM TÁ ALI 👉 ❤️";
-
-      }
-
-      else if (tentativas === 6) {
-
-        botaoNao.innerHTML =
-          "ÚLTIMA CHANCE 😂";
-
-      }
-
-      else if (tentativas >= 7) {
-
-        botaoNao.innerHTML =
-          "Tá bom... pode clicar 😅";
-
-        botaoNao.removeEventListener(
-          "mouseenter",
-          fugir
-        );
-
-        botaoNao.removeEventListener(
-          "touchstart",
-          fugir
-        );
-      }
-
-    }
-
-
-    // Computador
-
-    botaoNao.addEventListener(
-      "mouseenter",
-      fugir
-    );
-
-
-    // Celular
-
-    botaoNao.addEventListener(
-      "touchstart",
-      function(event) {
-
-        if (tentativas < 7) {
-
-          event.preventDefault();
-
-          fugir();
-
-        }
-
-      },
-      { passive: false }
-    );
-
-
-    // Caso finalmente consiga clicar no NÃO
-
-    botaoNao.addEventListener(
-      "click",
-      function() {
-
-        if (tentativas >= 7) {
-
-          alert(
-            "Justo 😅 Sem pressão. Podemos conversar quando você quiser. ❤️"
-          );
-
-        } else {
-
-          fugir();
-
-        }
-
-      }
-    );
-
-
-    // SIM ❤️
-
-    botaoSim.addEventListener(
-      "click",
-      function() {
-
-        botaoNao.style.display =
-          "none";
-
-        conteudoInicial.style.display =
-          "none";
-
-        resposta.style.display =
- 
+  // Festa ao clicar SIM
+  function

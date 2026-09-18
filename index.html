@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Posso te pedir uma coisa? ❤️</title>
+  <title>Tenho uma pergunta... ❤️</title>
 
   <style>
     * {
@@ -18,56 +18,58 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 25px;
+      padding: 20px;
 
       font-family: Arial, Helvetica, sans-serif;
+      color: white;
 
       background:
-        radial-gradient(circle at top, rgba(255,255,255,0.4), transparent 35%),
-        linear-gradient(135deg, #ff758c, #ff7eb3, #8e54e9);
+        radial-gradient(circle at top, rgba(255,255,255,.3), transparent 35%),
+        linear-gradient(135deg, #ff5f6d, #ffc371);
 
       overflow: hidden;
-      color: white;
     }
 
-    .container {
+    .card {
       width: 100%;
-      max-width: 650px;
+      max-width: 620px;
+      padding: 45px 30px;
+
       text-align: center;
 
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 30px;
+
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
 
-      border-radius: 28px;
-      padding: 45px 35px;
+      box-shadow: 0 25px 60px rgba(0,0,0,.25);
 
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-
-      animation: aparecer 1s ease;
+      animation: entrada .8s ease;
       position: relative;
       z-index: 10;
     }
 
-    @keyframes aparecer {
+    @keyframes entrada {
       from {
         opacity: 0;
-        transform: translateY(30px) scale(0.95);
+        transform: translateY(30px) scale(.95);
       }
+
       to {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
     }
 
-    .heart {
+    .coracao-principal {
       font-size: 70px;
-      animation: pulsar 1.5s infinite;
       margin-bottom: 15px;
+      animation: bater 1.2s infinite;
     }
 
-    @keyframes pulsar {
+    @keyframes bater {
       0%, 100% {
         transform: scale(1);
       }
@@ -78,96 +80,113 @@
     }
 
     h1 {
-      font-size: 38px;
-      margin-bottom: 20px;
+      font-size: 36px;
+      margin-bottom: 22px;
     }
 
-    .texto {
+    .mensagem {
       font-size: 18px;
       line-height: 1.7;
-      opacity: 0.95;
-      margin-bottom: 28px;
-    }
-
-    .pergunta {
-      font-size: 25px;
-      font-weight: bold;
       margin-bottom: 30px;
     }
 
-    .botoes {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
+    .pergunta {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 35px;
+    }
+
+    .area-botoes {
+      height: 100px;
+      position: relative;
     }
 
     button {
       border: none;
+      padding: 16px 30px;
       border-radius: 50px;
-      padding: 15px 28px;
 
       font-size: 17px;
       font-weight: bold;
 
       cursor: pointer;
-      transition: 0.3s;
 
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 10px 25px rgba(0,0,0,.18);
+
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease;
     }
 
-    .sim {
+    #sim {
+      position: absolute;
+
+      left: 25%;
+      top: 10px;
+
+      transform: translateX(-50%);
+
       background: white;
-      color: #e84a7f;
+      color: #e63963;
     }
 
-    .sim:hover {
-      transform: scale(1.08);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    #sim:hover {
+      transform: translateX(-50%) scale(1.12);
+      box-shadow: 0 15px 30px rgba(0,0,0,.25);
     }
 
-    .conversar {
-      background: rgba(255,255,255,0.18);
+    #nao {
+      position: fixed;
+
+      background: #333;
       color: white;
-      border: 1px solid rgba(255,255,255,0.45);
-    }
 
-    .conversar:hover {
-      background: rgba(255,255,255,0.3);
-      transform: scale(1.05);
+      z-index: 999;
+
+      transition:
+        left .18s ease,
+        top .18s ease,
+        transform .15s ease;
     }
 
     #resposta {
       display: none;
-      margin-top: 28px;
-      padding: 20px;
-
-      background: rgba(255,255,255,0.15);
-      border-radius: 20px;
-
-      font-size: 20px;
-      line-height: 1.5;
-
-      animation: aparecer 0.8s ease;
+      animation: entrada .8s ease;
     }
 
-    .coracao-flutuante {
+    #resposta h2 {
+      font-size: 34px;
+      margin-bottom: 20px;
+    }
+
+    #resposta p {
+      font-size: 19px;
+      line-height: 1.7;
+    }
+
+    .emoji-final {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: bater .7s infinite;
+    }
+
+    .heart {
       position: fixed;
-      bottom: -40px;
+
+      bottom: -50px;
+
       pointer-events: none;
-      z-index: 1;
 
       animation: subir linear forwards;
+
+      z-index: 1;
     }
 
     @keyframes subir {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 0;
-      }
 
-      20% {
-        opacity: 0.8;
+      0% {
+        transform: translateY(0) rotate(0);
+        opacity: 1;
       }
 
       100% {
@@ -176,31 +195,33 @@
       }
     }
 
-    .assinatura {
-      margin-top: 25px;
-      font-size: 14px;
-      opacity: 0.7;
+    .aviso {
+      margin-top: 20px;
+      font-size: 13px;
+      opacity: .7;
     }
 
     @media (max-width: 600px) {
-      .container {
-        padding: 35px 22px;
+
+      .card {
+        padding: 35px 20px;
       }
 
       h1 {
-        font-size: 30px;
+        font-size: 29px;
       }
 
-      .texto {
+      .mensagem {
         font-size: 16px;
       }
 
       .pergunta {
-        font-size: 21px;
+        font-size: 22px;
       }
 
       button {
-        width: 100%;
+        padding: 14px 22px;
+        font-size: 15px;
       }
     }
   </style>
@@ -208,145 +229,305 @@
 
 <body>
 
-  <div class="container">
+  <div class="card" id="card">
 
-    <div class="heart">❤️</div>
+    <div id="conteudoInicial">
 
-    <h1>Eu queria te pedir uma coisa...</h1>
+      <div class="coracao-principal">
+        ❤️
+      </div>
 
-    <div class="texto">
-      Sei que nem tudo saiu como a gente gostaria.<br><br>
+      <h1>Ok... precisamos conversar 😅</h1>
 
-      Mas algumas pessoas são importantes demais
-      para simplesmente deixarmos que o orgulho,
-      as diferenças ou os erros apaguem tudo o que foi bom.<br><br>
+      <div class="mensagem">
 
-      Não quero fingir que nada aconteceu.
-      Quero apenas saber se podemos deixar o passado onde ele está,
-      conversar com calma e tentar construir algo melhor daqui para frente.
+        Eu pensei em escrever um textão enorme...
+
+        <br><br>
+
+        Pensei em fazer um discurso digno de novela...
+
+        <br><br>
+
+        Mas resolvi facilitar. 😂
+
+        <br><br>
+
+        A verdade é que sinto falta das coisas boas,
+        das risadas e da nossa paz.
+
+        <br><br>
+
+        Então eu tenho apenas uma pequena pergunta...
+
+      </div>
+
+      <div class="pergunta">
+        Vamos fazer as pazes? 🥺❤️
+      </div>
+
+      <div class="area-botoes">
+
+        <button id="sim">
+          SIM ❤️
+        </button>
+
+      </div>
+
+      <div class="aviso">
+        Escolha com sabedoria 👀
+      </div>
+
     </div>
 
-    <div class="pergunta">
-      Você aceita se reconciliar comigo? 🥺❤️
-    </div>
 
-    <div class="botoes">
+    <div id="resposta">
 
-      <button class="sim" onclick="responderSim()">
-        ❤️ Sim, vamos tentar
-      </button>
+      <div class="emoji-final">
+        🥳❤️
+      </div>
 
-      <button class="conversar" onclick="responderConversar()">
-        💬 Quero conversar primeiro
-      </button>
+      <h2>EU SABIA! 😂</h2>
 
-    </div>
+      <p>
+        Decisão aceita com sucesso! ✅
+        <br><br>
 
-    <div id="resposta"></div>
+        O tratado de paz acaba de ser oficialmente assinado.
+        🤝😂
+        <br><br>
 
-    <div class="assinatura">
-      Feito com carinho ❤️
+        As tretas anteriores serão arquivadas,
+        o orgulho será colocado de castigo
+        e uma nova tentativa acaba de ser desbloqueada.
+        ❤️
+        <br><br>
+
+        Agora vem cá...
+        <br>
+        precisamos conversar de verdade. 🥹
+      </p>
+
     </div>
 
   </div>
 
 
+  <button id="nao">
+    NÃO 😒
+  </button>
+
+
   <script>
 
-    function responderSim() {
-      const resposta = document.getElementById("resposta");
+    const botaoNao = document.getElementById("nao");
+    const botaoSim = document.getElementById("sim");
 
-      resposta.style.display = "block";
+    const conteudoInicial =
+      document.getElementById("conteudoInicial");
 
-      resposta.innerHTML = `
-        ❤️<br><br>
-        <strong>Obrigado por me dar essa oportunidade.</strong>
-        <br><br>
-        Não quero prometer perfeição.
-        Quero prometer diálogo, respeito e vontade de fazer diferente.
-        <br><br>
-        Talvez esse seja o começo de um novo capítulo. ✨
-      `;
+    const resposta =
+      document.getElementById("resposta");
 
-      festaDeCoracoes();
+    let tentativas = 0;
+
+
+    // Coloca o botão NÃO perto do SIM ao abrir a página
+
+    function posicaoInicialNao() {
+
+      const card = document.getElementById("card");
+      const rect = card.getBoundingClientRect();
+
+      botaoNao.style.left =
+        (rect.left + rect.width * 0.58) + "px";
+
+      botaoNao.style.top =
+        (rect.bottom - 130) + "px";
     }
 
 
-    function responderConversar() {
-      const resposta = document.getElementById("resposta");
-
-      resposta.style.display = "block";
-
-      resposta.innerHTML = `
-        💬<br><br>
-        <strong>Está tudo bem.</strong>
-        <br><br>
-        Não quero te pressionar.
-        Conversar com sinceridade já significa muito para mim.
-        <br><br>
-        Quando você se sentir confortável, estarei disposto(a) a ouvir. ❤️
-      `;
-    }
+    window.addEventListener(
+      "load",
+      posicaoInicialNao
+    );
 
 
-    function criarCoracao() {
-
-      const coracao = document.createElement("div");
-
-      coracao.classList.add("coracao-flutuante");
-
-      const emojis = ["❤️", "💕", "💗", "💖", "🤍"];
-
-      coracao.innerHTML =
-        emojis[Math.floor(Math.random() * emojis.length)];
-
-      coracao.style.left =
-        Math.random() * 100 + "vw";
-
-      coracao.style.fontSize =
-        (15 + Math.random() * 25) + "px";
-
-      coracao.style.animationDuration =
-        (4 + Math.random() * 4) + "s";
-
-      document.body.appendChild(coracao);
-
-      setTimeout(() => {
-        coracao.remove();
-      }, 8000);
-    }
+    window.addEventListener(
+      "resize",
+      posicaoInicialNao
+    );
 
 
-    function festaDeCoracoes() {
+    // Faz o botão fugir
 
-      let quantidade = 0;
+    function fugir() {
 
-      const intervalo = setInterval(() => {
+      tentativas++;
 
-        criarCoracao();
-        criarCoracao();
+      const larguraBotao =
+        botaoNao.offsetWidth;
 
-        quantidade++;
+      const alturaBotao =
+        botaoNao.offsetHeight;
 
-        if (quantidade > 20) {
-          clearInterval(intervalo);
-        }
-
-      }, 120);
-
-    }
+      const margem = 20;
 
 
-    // Alguns corações aparecem suavemente ao abrir a página
-    setInterval(() => {
+      const maxX =
+        window.innerWidth -
+        larguraBotao -
+        margem;
 
-      if (Math.random() > 0.6) {
-        criarCoracao();
+      const maxY =
+        window.innerHeight -
+        alturaBotao -
+        margem;
+
+
+      const novoX =
+        Math.max(
+          margem,
+          Math.random() * maxX
+        );
+
+      const novoY =
+        Math.max(
+          margem,
+          Math.random() * maxY
+        );
+
+
+      botaoNao.style.left =
+        novoX + "px";
+
+      botaoNao.style.top =
+        novoY + "px";
+
+
+      // As frases vão mudando 😈
+
+      if (tentativas === 1) {
+
+        botaoNao.innerHTML =
+          "OPA! 😂";
+
       }
 
-    }, 1500);
+      else if (tentativas === 2) {
 
-  </script>
+        botaoNao.innerHTML =
+          "TENTA DE NOVO 😏";
 
-</body>
-</html>
+      }
+
+      else if (tentativas === 3) {
+
+        botaoNao.innerHTML =
+          "QUASE! 😂";
+
+      }
+
+      else if (tentativas === 4) {
+
+        botaoNao.innerHTML =
+          "VOCÊ NÃO DESISTE? 👀";
+
+      }
+
+      else if (tentativas === 5) {
+
+        botaoNao.innerHTML =
+          "O SIM TÁ ALI 👉 ❤️";
+
+      }
+
+      else if (tentativas === 6) {
+
+        botaoNao.innerHTML =
+          "ÚLTIMA CHANCE 😂";
+
+      }
+
+      else if (tentativas >= 7) {
+
+        botaoNao.innerHTML =
+          "Tá bom... pode clicar 😅";
+
+        botaoNao.removeEventListener(
+          "mouseenter",
+          fugir
+        );
+
+        botaoNao.removeEventListener(
+          "touchstart",
+          fugir
+        );
+      }
+
+    }
+
+
+    // Computador
+
+    botaoNao.addEventListener(
+      "mouseenter",
+      fugir
+    );
+
+
+    // Celular
+
+    botaoNao.addEventListener(
+      "touchstart",
+      function(event) {
+
+        if (tentativas < 7) {
+
+          event.preventDefault();
+
+          fugir();
+
+        }
+
+      },
+      { passive: false }
+    );
+
+
+    // Caso finalmente consiga clicar no NÃO
+
+    botaoNao.addEventListener(
+      "click",
+      function() {
+
+        if (tentativas >= 7) {
+
+          alert(
+            "Justo 😅 Sem pressão. Podemos conversar quando você quiser. ❤️"
+          );
+
+        } else {
+
+          fugir();
+
+        }
+
+      }
+    );
+
+
+    // SIM ❤️
+
+    botaoSim.addEventListener(
+      "click",
+      function() {
+
+        botaoNao.style.display =
+          "none";
+
+        conteudoInicial.style.display =
+          "none";
+
+        resposta.style.display =
+ 
